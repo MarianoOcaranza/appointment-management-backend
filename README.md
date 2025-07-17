@@ -14,7 +14,7 @@ Appointments-Management is a backend project built with Spring Boot and tested w
 
 ### *** IMPORTANT! ***
 As this project is in development stages, applications.properties file is not properly protected. 
-The only environment variable you should set to test the application locally, is the JWT_SECRET (you can use any only key generator).
+The only environment variable you should set to test the application locally, is the JWT_SECRET (you can use any online key generator).
 The rest of the properties, like the database root password or the admin password, is in plain text and you can change it as you want. In the future, this will be managed with environment variables for protection.
 
 
