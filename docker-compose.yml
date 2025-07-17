@@ -1,0 +1,15 @@
+services:
+  db: 
+    image: mysql:8.0
+    container_name: turnos_consultorio_container
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345678 #this is absolutely not secure, but works for local testing purposes
+      MYSQL_DATABASE: consultorio_database
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data: 
+    name: consultorio_volume
