@@ -7,26 +7,25 @@ import consultorio.gestion_turnos.entities.Patient;
 import consultorio.gestion_turnos.entities.Professional;
 import consultorio.gestion_turnos.entities.User;
 import consultorio.gestion_turnos.enums.Role;
-
 import java.time.LocalDateTime;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import consultorio.gestion_turnos.repositories.PatientRepository;
 import consultorio.gestion_turnos.repositories.ProfessionalRepository;
 import consultorio.gestion_turnos.repositories.UserRepository;
 import consultorio.gestion_turnos.security.UserDetailsImpl;
 
 @Service
-public class UserService implements UserDetailsService{
+public class UserService implements UserDetailsService {
+
     private final UserRepository userRepository;
     private final PatientRepository patientRepository;
     private final ProfessionalRepository professionalRepository;
     private final PasswordEncoder passwordEncoder;
+
 
     public UserService(UserRepository userRepository, PatientRepository patientRepository, ProfessionalRepository professionalRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -35,6 +34,8 @@ public class UserService implements UserDetailsService{
         this.passwordEncoder = passwordEncoder;
     }
 
+
+//------------------------------Register patient---------------------------------
     public void registrarPaciente(PatientRegisterDto dto) throws Exception {
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new Exception("Email already in use");
@@ -42,7 +43,10 @@ public class UserService implements UserDetailsService{
         if (userRepository.existsByUsername(dto.getUsername())) {
             throw new Exception("Username already exists");
         }
-
+        if (patientRepository.existsByInsuranceNumber(dto.getInsuranceNumber())) {
+            throw new Exception("Insurance number is already registered");
+        }
+        
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setFirstName(dto.getFirstName());
@@ -52,16 +56,18 @@ public class UserService implements UserDetailsService{
         user.setPhone(dto.getPhone());
         user.setRole(Role.PACIENTE);
         user.setActive(true);
+        user.setUpDateTime(LocalDateTime.now());
 
         Patient patient = new Patient();
         patient.setUser(user);
         patient.setInsuranceNumber(dto.getInsuranceNumber());
-        patient.setUpDateTime(LocalDateTime.now());
         
         userRepository.save(user);
         patientRepository.save(patient);
     }
 
+
+//------------------------------Register professional---------------------------------
     public void registrarProfesional(ProfessionalRegisterDto dto) throws Exception {
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new Exception("Email already in use");
@@ -79,19 +85,18 @@ public class UserService implements UserDetailsService{
         user.setPhone(dto.getPhone());
         user.setRole(Role.PROFESIONAL);
         user.setActive(true);
+        user.setUpDateTime(LocalDateTime.now());
 
         Professional professional = new Professional();
         professional.setSpecialty(dto.getSpecialty());
         professional.setUser(user);
 
-        professional.setUpDateTime(LocalDateTime.now());
-
         userRepository.save(user);
         professionalRepository.save(professional);
-  
     }
     
 
+//------------------------------Register admin---------------------------------
     public void registrarAdmin(UserRegisterDto dto) throws Exception {
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new Exception("Email already in use");
@@ -109,10 +114,13 @@ public class UserService implements UserDetailsService{
         user.setPhone(dto.getPhone());
         user.setRole(Role.ADMIN);
         user.setActive(true);
+        user.setUpDateTime(LocalDateTime.now());
 
         userRepository.save(user);
     }
 
+
+//------------------------------Deactivate user---------------------------------
     public void deactivateUser(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null) {
@@ -121,9 +129,10 @@ public class UserService implements UserDetailsService{
             throw new UsernameNotFoundException("Username is already unactive");
         }
         user.setActive(false);
-        
     }
 
+
+//----------------------Load by username (UserDetailsService)--------------------------
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
@@ -134,5 +143,4 @@ public class UserService implements UserDetailsService{
         }
         return new UserDetailsImpl(user);
     }       
-
 }

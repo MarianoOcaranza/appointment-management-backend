@@ -1,4 +1,8 @@
 package consultorio.gestion_turnos.entities;
+import java.time.LocalDateTime;
+
+import org.springframework.data.annotation.CreatedDate;
+
 import consultorio.gestion_turnos.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,5 +42,8 @@ public class User {
     private Role role;
 
     private Boolean active;
-    
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime upDateTime;    
 }

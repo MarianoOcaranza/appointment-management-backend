@@ -1,10 +1,10 @@
 package consultorio.gestion_turnos.config;
 
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
 import consultorio.gestion_turnos.entities.User;
 import consultorio.gestion_turnos.enums.Role;
 import consultorio.gestion_turnos.repositories.UserRepository;
@@ -42,6 +42,7 @@ public class AdminInitializer implements CommandLineRunner{
             admin.setPhone("N/A");
             admin.setRole(Role.ADMIN);
             admin.setActive(true);
+            admin.setUpDateTime(LocalDateTime.now());
 
             userRepository.save(admin);
 

@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import consultorio.gestion_turnos.entities.User;
+import consultorio.gestion_turnos.enums.Role;
 
 public class UserDetailsImpl implements UserDetails {
     
@@ -30,6 +31,10 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public String getUsername() {
         return user.getUsername();
+    }
+
+    public Role getRole() {
+        return user.getRole();
     }
 
 }

@@ -1,11 +1,7 @@
 package consultorio.gestion_turnos.entities;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.data.annotation.CreatedDate;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,11 +21,8 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String insuranceNumber;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime upDateTime;
     
     @OneToOne
     @JoinColumn(name="user_id", nullable = false)
