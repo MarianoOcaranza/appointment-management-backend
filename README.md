@@ -26,7 +26,7 @@ A docker-compose.yml file is provided in this project.
 After the docker container and docker volume are ready, you can test the endpoints with Postman by running `GestionTurnosApplication.java`
 
 Testeable endpoints are visible in 
-`http://localhost:8080/swagger-ui.html`
+`http://localhost:8080/swagger-ui/index.html`
 
 
 
