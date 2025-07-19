@@ -31,7 +31,5 @@ Testeable endpoints are visible in
 
 
 ### *** This README is currently being developed ***
-# In development important features:
-    - Refresh token implementation
-    - Complete CRUD for appointments (only 'create' has been done yet)
+   
 
