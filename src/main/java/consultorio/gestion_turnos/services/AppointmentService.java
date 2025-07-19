@@ -1,9 +1,11 @@
 package consultorio.gestion_turnos.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import consultorio.gestion_turnos.dto.AppointmentRequestDto;
+import consultorio.gestion_turnos.dto.AppointmentRetrieveDto;
 import consultorio.gestion_turnos.entities.Appointment;
 import consultorio.gestion_turnos.entities.Patient;
 import consultorio.gestion_turnos.entities.Professional;
@@ -14,9 +16,11 @@ import consultorio.gestion_turnos.repositories.PatientRepository;
 import consultorio.gestion_turnos.repositories.ProfessionalRepository;
 import consultorio.gestion_turnos.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class AppointmentService {
+
     private AppointmentRepository appointmentRepository;
     private ProfessionalRepository professionalRepository;
     private UserRepository userRepository;
@@ -53,4 +57,47 @@ public class AppointmentService {
         
         appointmentRepository.save(appointment);
     }
+
+    //Instead of deleting, I would prefer 'cancelling' appointments. But that will be a future implementation
+    public void deleteAppointment(Long id) throws Exception {
+        Appointment appointment = appointmentRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Appointment not found"));
+        String principal = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if (!appointment.getPatient().getUser().getUsername().equals(principal)) {
+            throw new Exception("This appointment is not yours!!!");
+        }
+        
+        appointmentRepository.delete(appointment);
+    }
+
+    @Transactional
+    public List<AppointmentRetrieveDto> getPatientAppointments() {
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Patient patient = patientRepository.findByUserId(user.getId()).orElseThrow(()-> new EntityNotFoundException("User is not a patient"));
+        
+        return patient.getAppointments().stream()
+            .map(appointment -> new AppointmentRetrieveDto(
+                appointment.getId(),
+                appointment.getProfessional().getUser().getUsername(),
+                appointment.getPatient().getUser().getUsername(),
+                appointment.getDateTime()
+            )).collect(Collectors.toList());
+    }
+
+
+    @Transactional
+    public List<AppointmentRetrieveDto> getProfessionalAppointments() {
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Professional professional = professionalRepository.findByUserId(user.getId()).orElseThrow(()-> new EntityNotFoundException("User is not a professional"));
+
+        return professional.getAppointments().stream()
+            .map(appointment -> new AppointmentRetrieveDto(
+                appointment.getId(),
+                appointment.getProfessional().getUser().getUsername(),
+                appointment.getPatient().getUser().getUsername(),
+                appointment.getDateTime()
+            )).collect(Collectors.toList());
+    }
+
+
 }
