@@ -50,10 +50,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
             } catch (Exception e) {
-                System.out.println("Token inválido: " + e.getMessage());
+                System.out.println("Invalid token: " + e.getMessage());
             }
         } else {
-            System.out.println("No se encontró la cookie");
+            System.out.println("Cookie not found");
         }
 
         filterChain.doFilter(request, response);

@@ -7,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -82,12 +82,12 @@ public class AuthController {
             cookie.setMaxAge(24*60*60);
             response.addCookie(cookie);
 
-            return ResponseEntity.ok("Login successful, welcome " + jwtUtils.getUsernameFromToken(token) + " Role: " + jwtUtils.getRoleFromToken(token));
+            return ResponseEntity.ok("Login successfull, welcome " + jwtUtils.getUsernameFromToken(token) + " Role: " + jwtUtils.getRoleFromToken(token));
 
-        } catch(AuthenticationException e) {
+        } catch(UsernameNotFoundException e) {
             return ResponseEntity.status(403).body("Invalid credentials: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Unexpected error: " + e.getMessage());
+            return ResponseEntity.status(500).body("Unexpected error: " + e.getLocalizedMessage());
         }
     }
 }

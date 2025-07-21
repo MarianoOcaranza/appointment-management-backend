@@ -8,6 +8,7 @@ import consultorio.gestion_turnos.entities.Professional;
 import consultorio.gestion_turnos.entities.User;
 import consultorio.gestion_turnos.enums.Role;
 import java.time.LocalDateTime;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -129,17 +130,19 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("Username is already unactive");
         }
         user.setActive(false);
+        userRepository.save(user);
     }
 
 
 //----------------------Load by username (UserDetailsService)--------------------------
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{   
         User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("Invalid username or password");
-        } else if (!user.getActive()) {
-            throw new UsernameNotFoundException("User is not active!");
+        if(user == null ) {
+            throw new UsernameNotFoundException("User does not exists");
+        }
+        if (!user.getActive()) {
+            throw new UsernameNotFoundException("User is not active");
         }
         return new UserDetailsImpl(user);
     }       

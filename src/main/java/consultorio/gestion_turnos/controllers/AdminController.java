@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,7 +67,7 @@ public class AdminController {
     }
 
 //------------------------Deactivate user endpoint /api/admin/deactivate/{username}---------------------------------
-    @PostMapping("/deactivate/{username}")
+    @PutMapping("/deactivate/{username}")
     public ResponseEntity<?> deactivateUser(@PathVariable String username) {
         try {
             userService.deactivateUser(username);
