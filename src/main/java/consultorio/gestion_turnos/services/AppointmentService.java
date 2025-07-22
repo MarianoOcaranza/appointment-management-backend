@@ -1,5 +1,6 @@
 package consultorio.gestion_turnos.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,7 +37,7 @@ public class AppointmentService {
     public void createAppointment(AppointmentRequestDto dto) throws Exception {
         User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
 
-        if(!user.getRole().equals(Role.PACIENTE)) {
+        if(!user.getRole().equals(Role.PATIENT)) {
             throw new Exception("User is not a patient");
         }
 
@@ -71,33 +72,35 @@ public class AppointmentService {
     }
 
     @Transactional
-    public List<AppointmentRetrieveDto> getPatientAppointments() {
+    public List<AppointmentRetrieveDto> getAppointments() throws Exception {
         User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        Patient patient = patientRepository.findByUserId(user.getId()).orElseThrow(()-> new EntityNotFoundException("User is not a patient"));
-        
-        return patient.getAppointments().stream()
-            .map(appointment -> new AppointmentRetrieveDto(
-                appointment.getId(),
-                appointment.getProfessional().getUser().getUsername(),
-                appointment.getPatient().getUser().getUsername(),
-                appointment.getDateTime()
-            )).collect(Collectors.toList());
+        List<AppointmentRetrieveDto> appointments = new ArrayList<>();
+
+        try {
+            if(user.getRole().equals(Role.PROFESSIONAL)) {
+                Professional professional = professionalRepository.findByUserId(user.getId()).orElseThrow(()-> new EntityNotFoundException("User is not a professional"));
+                appointments = professional.getAppointments().stream()
+                    .map(appointment -> new AppointmentRetrieveDto(
+                        appointment.getId(),
+                        appointment.getProfessional().getUser().getUsername(),
+                        appointment.getPatient().getUser().getUsername(),
+                        appointment.getDateTime()
+                    ))
+                    .collect(Collectors.toList());
+            } else if (user.getRole().equals(Role.PATIENT)) {
+                Patient patient = patientRepository.findByUserId(user.getId()).orElseThrow(()-> new EntityNotFoundException("User is not a patient"));
+                appointments = patient.getAppointments().stream()
+                    .map(appointment -> new AppointmentRetrieveDto(
+                        appointment.getId(),
+                        appointment.getProfessional().getUser().getUsername(),
+                        appointment.getPatient().getUser().getUsername(),
+                        appointment.getDateTime()
+                    ))
+                    .collect(Collectors.toList());
+            }
+        } catch(Exception e) {
+            throw new Exception("Error retrieving your appointments: " + e.getMessage());
+        }
+        return appointments;
     }
-
-
-    @Transactional
-    public List<AppointmentRetrieveDto> getProfessionalAppointments() {
-        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        Professional professional = professionalRepository.findByUserId(user.getId()).orElseThrow(()-> new EntityNotFoundException("User is not a professional"));
-
-        return professional.getAppointments().stream()
-            .map(appointment -> new AppointmentRetrieveDto(
-                appointment.getId(),
-                appointment.getProfessional().getUser().getUsername(),
-                appointment.getPatient().getUser().getUsername(),
-                appointment.getDateTime()
-            )).collect(Collectors.toList());
-    }
-
-
 }

@@ -13,4 +13,5 @@ public class AppointmentRequestDto {
 
     @NotBlank(message = "Please set a datetime")
     private LocalDateTime dateTime;
+    
 }

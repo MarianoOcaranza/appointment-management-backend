@@ -2,8 +2,8 @@ package consultorio.gestion_turnos.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,17 +17,15 @@ import consultorio.gestion_turnos.dto.AppointmentRetrieveDto;
 import consultorio.gestion_turnos.services.AppointmentService;
 
 @RestController
-@RequestMapping("/api/patient")
-public class PatientController {
-
-    @Autowired
+@RequestMapping("/api/appointments")
+public class AppointmentController {
     private AppointmentService appointmentService;
-    
-    @GetMapping("/appointments")
-    private List<AppointmentRetrieveDto> getPatientAppointments() {
-        return appointmentService.getPatientAppointments();
+
+    public AppointmentController(AppointmentService appointmentService) {
+        this.appointmentService = appointmentService;
     }
 
+    @PreAuthorize("hasRole('PATIENT')")
     @PostMapping("/new-appointment")
     private ResponseEntity<?> createAppointment(@RequestBody AppointmentRequestDto dto) {
         try {
@@ -36,6 +34,12 @@ public class PatientController {
         } catch(Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @PreAuthorize("hasRole('PATIENT')")
+    @GetMapping("/my-appointments")
+    private List<AppointmentRetrieveDto> getPatientAppointments() throws Exception {
+        return appointmentService.getAppointments();
     }
 
     @DeleteMapping("/delete-appointment/{id}")
