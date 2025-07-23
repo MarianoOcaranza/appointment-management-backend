@@ -35,7 +35,7 @@ public class SecurityConfig {
             .clearAuthentication(true))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-            .requestMatchers("/api/appointments/**", "/api/user/**").authenticated()
+            .requestMatchers("/api/appointments/**", "/api/user/**", "/api/professionals/**").authenticated()
             .anyRequest().authenticated()
         )
         .addFilterBefore(new JwtAuthenticationFilter(jwtUtils, userDetailsService), UsernamePasswordAuthenticationFilter.class)

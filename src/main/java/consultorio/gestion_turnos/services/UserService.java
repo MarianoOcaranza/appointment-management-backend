@@ -89,6 +89,7 @@ public class UserService implements UserDetailsService {
         Professional professional = new Professional();
         professional.setSpecialty(dto.getSpecialty());
         professional.setUser(user);
+        professional.setLastName(dto.getLastName());
 
         userRepository.save(user);
         professionalRepository.save(professional);

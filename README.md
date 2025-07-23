@@ -7,7 +7,7 @@ As this project is in development stages, applications.properties file is not pr
 JWT Secret is in plain text, as well as database root credentials. 
 This will be changed in production.
 
-## Technologies and Tools
+## Technologies and Tools used
 - Java Spring Boot
 - Spring Security
 - JSON Web Tokens
@@ -16,6 +16,17 @@ This will be changed in production.
 - JPA/Hibernate
 - DTOs for input validation
 - Maven
+
+## Features
+- Register user as Professional
+- Register user as Patient
+- Authentication & Authorization with cookie-based JWT and Spring Security
+- Deactivate user
+- Retrieve all professionals (paginated, 10 professionals per page)
+- Retrieve professionals by search parameters (specialty or last name)
+- Schedule appointments
+- Cancel appointments
+- Retrieve appointments
 
 ## Test in local:
 A docker-compose.yml file is provided in this project. 
@@ -27,9 +38,5 @@ After the docker container and docker volume are ready, you can test the endpoin
 
 Testeable endpoints are visible in 
 `http://localhost:8080/swagger-ui/index.html`
-
-
-
-### *** This README is currently being developed ***
    
 
