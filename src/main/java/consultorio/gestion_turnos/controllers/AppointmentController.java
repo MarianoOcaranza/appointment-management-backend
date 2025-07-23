@@ -36,9 +36,8 @@ public class AppointmentController {
         }
     }
 
-    @PreAuthorize("hasRole('PATIENT')")
     @GetMapping("/my-appointments")
-    private List<AppointmentRetrieveDto> getPatientAppointments() throws Exception {
+    private List<AppointmentRetrieveDto> getAppointments() throws Exception {
         return appointmentService.getAppointments();
     }
 
