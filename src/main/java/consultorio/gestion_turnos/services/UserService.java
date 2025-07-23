@@ -2,13 +2,11 @@ package consultorio.gestion_turnos.services;
 
 import consultorio.gestion_turnos.dto.PatientRegisterDto;
 import consultorio.gestion_turnos.dto.ProfessionalRegisterDto;
-import consultorio.gestion_turnos.dto.UserRegisterDto;
 import consultorio.gestion_turnos.entities.Patient;
 import consultorio.gestion_turnos.entities.Professional;
 import consultorio.gestion_turnos.entities.User;
 import consultorio.gestion_turnos.enums.Role;
 import java.time.LocalDateTime;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -37,7 +35,7 @@ public class UserService implements UserDetailsService {
 
 
 //------------------------------Register patient---------------------------------
-    public void registrarPaciente(PatientRegisterDto dto) throws Exception {
+    public void registerPatient(PatientRegisterDto dto) throws Exception {
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new Exception("Email already in use");
         }
@@ -55,7 +53,7 @@ public class UserService implements UserDetailsService {
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setPhone(dto.getPhone());
-        user.setRole(Role.PACIENTE);
+        user.setRole(Role.PATIENT);
         user.setActive(true);
         user.setUpDateTime(LocalDateTime.now());
 
@@ -69,7 +67,7 @@ public class UserService implements UserDetailsService {
 
 
 //------------------------------Register professional---------------------------------
-    public void registrarProfesional(ProfessionalRegisterDto dto) throws Exception {
+    public void registerProfessional(ProfessionalRegisterDto dto) throws Exception {
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new Exception("Email already in use");
         }
@@ -84,7 +82,7 @@ public class UserService implements UserDetailsService {
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setPhone(dto.getPhone());
-        user.setRole(Role.PROFESIONAL);
+        user.setRole(Role.PROFESSIONAL);
         user.setActive(true);
         user.setUpDateTime(LocalDateTime.now());
 
@@ -96,31 +94,6 @@ public class UserService implements UserDetailsService {
         professionalRepository.save(professional);
     }
     
-
-//------------------------------Register admin---------------------------------
-    public void registrarAdmin(UserRegisterDto dto) throws Exception {
-        if (userRepository.existsByEmail(dto.getEmail())) {
-            throw new Exception("Email already in use");
-        }
-        if (userRepository.existsByUsername(dto.getUsername())) {
-            throw new Exception("Username already exists");
-        }
-
-        User user = new User();
-        user.setUsername(dto.getUsername());
-        user.setFirstName(dto.getFirstName());
-        user.setLastName(dto.getLastName());
-        user.setEmail(dto.getEmail());
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        user.setPhone(dto.getPhone());
-        user.setRole(Role.ADMIN);
-        user.setActive(true);
-        user.setUpDateTime(LocalDateTime.now());
-
-        userRepository.save(user);
-    }
-
-
 //------------------------------Deactivate user---------------------------------
     public void deactivateUser(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);

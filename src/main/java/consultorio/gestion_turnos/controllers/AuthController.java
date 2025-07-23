@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import consultorio.gestion_turnos.dto.PatientRegisterDto;
+import consultorio.gestion_turnos.dto.ProfessionalRegisterDto;
 import consultorio.gestion_turnos.dto.UserLoginDto;
 import consultorio.gestion_turnos.security.JwtUtils;
 import consultorio.gestion_turnos.services.UserService;
@@ -35,9 +36,9 @@ public class AuthController {
     @Autowired
     private JwtUtils jwtUtils;
 
-//------------------------------Register patient endpoint /api/auth/register---------------------------------
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody PatientRegisterDto dto, BindingResult bindingValidations) {
+//------------------------------Register patient endpoint /api/auth/register-patient---------------------------------
+    @PostMapping("/register-patient")
+    public ResponseEntity<?> registerPatient(@Valid @RequestBody PatientRegisterDto dto, BindingResult bindingValidations) {
 
         if (bindingValidations.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
@@ -48,11 +49,32 @@ public class AuthController {
         }
 
         try {
-            userService.registrarPaciente(dto);
+            userService.registerPatient(dto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
         return ResponseEntity.ok("Patient registered successfully");
+    }
+
+//------------------------------Register professional endpoint /api/auth/register-professional---------------------------------
+    @PostMapping("/register-professional")
+    public ResponseEntity<?> registerProfessional(@Valid @RequestBody ProfessionalRegisterDto dto, BindingResult bindingValidations) {
+
+        if (bindingValidations.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingValidations.getFieldErrors().forEach(error -> {
+                errors.put(error.getField(), error.getField() + error.getDefaultMessage());
+            });
+            return ResponseEntity.badRequest().body(errors);
+        }
+
+        try {
+            userService.registerProfessional(dto);
+        } catch(Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+        return ResponseEntity.ok("Professional registered successfully");
     }
 
 //------------------------------Login endpoint /api/auth/login---------------------------------
