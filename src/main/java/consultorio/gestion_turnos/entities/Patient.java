@@ -2,7 +2,6 @@ package consultorio.gestion_turnos.entities;
 
 import java.util.ArrayList;
 import java.util.List;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,9 +20,6 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String insuranceNumber;
-    
     @OneToOne
     @JoinColumn(name="user_id", nullable = false)
     private User user;

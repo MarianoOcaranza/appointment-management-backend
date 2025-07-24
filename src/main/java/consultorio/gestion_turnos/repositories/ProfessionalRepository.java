@@ -21,7 +21,7 @@ public interface ProfessionalRepository extends JpaRepository<Professional, Long
         //user entity with hibernate.
         @Query("""
                 SELECT new consultorio.gestion_turnos.dto.ProfessionalRetrieveDto(
-                u.firstName, u.lastName, u.phone, u.email, p.specialty
+                u.firstName, u.lastName, u.phone, u.email, p.specialty, u.provincia, u.localidad, p.matriculaNac, p.matriculaProv, p.modalidad
                 )
                 FROM Professional p
                 JOIN p.user u
@@ -31,12 +31,14 @@ public interface ProfessionalRepository extends JpaRepository<Professional, Long
 
         @Query("""
                 SELECT new consultorio.gestion_turnos.dto.ProfessionalRetrieveDto(
-                u.firstName, u.lastName, u.phone, u.email, p.specialty
+                u.firstName, u.lastName, u.phone, u.email, p.specialty, u.provincia, u.localidad, p.matriculaNac, p.matriculaProv, p.modalidad
                 )
                 FROM Professional p
                 JOIN p.user u
                 WHERE LOWER(p.specialty) LIKE LOWER(CONCAT('%', :search, '%'))
                 OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :search, '%'))
+                OR LOWER(u.provincia) LIKE LOWER(CONCAT('%', :search, '%'))
+                OR LOWER(u.localidad) LIKE LOWER(CONCAT('%', :search, '%'))
                 """)
         Page<ProfessionalRetrieveDto> searchProfessional(@Param("search") String search, Pageable pageable);
 }

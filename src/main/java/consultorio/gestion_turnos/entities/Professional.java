@@ -2,6 +2,8 @@ package consultorio.gestion_turnos.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import consultorio.gestion_turnos.enums.Modalidad;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,8 +24,12 @@ public class Professional {
 
     private String specialty;
 
-    private String lastName;
+    private String matriculaNac;
+    private String matriculaProv;
+    private Modalidad modalidad;
 
+    private String lastName;
+    
     @OneToOne
     @JoinColumn(name="user_id", nullable = false)
     private User user;

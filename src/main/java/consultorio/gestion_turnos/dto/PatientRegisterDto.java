@@ -7,5 +7,4 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class PatientRegisterDto extends UserRegisterDto {
 
-    private String insuranceNumber;
 }

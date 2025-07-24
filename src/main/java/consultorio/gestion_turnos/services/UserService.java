@@ -42,9 +42,6 @@ public class UserService implements UserDetailsService {
         if (userRepository.existsByUsername(dto.getUsername())) {
             throw new Exception("Username already exists");
         }
-        if (patientRepository.existsByInsuranceNumber(dto.getInsuranceNumber())) {
-            throw new Exception("Insurance number is already registered");
-        }
         
         User user = new User();
         user.setUsername(dto.getUsername());
@@ -55,11 +52,12 @@ public class UserService implements UserDetailsService {
         user.setPhone(dto.getPhone());
         user.setRole(Role.PATIENT);
         user.setActive(true);
+        user.setProvincia(dto.getProvincia());
+        user.setLocalidad(dto.getLocalidad());
         user.setUpDateTime(LocalDateTime.now());
 
         Patient patient = new Patient();
         patient.setUser(user);
-        patient.setInsuranceNumber(dto.getInsuranceNumber());
         
         userRepository.save(user);
         patientRepository.save(patient);
@@ -84,12 +82,17 @@ public class UserService implements UserDetailsService {
         user.setPhone(dto.getPhone());
         user.setRole(Role.PROFESSIONAL);
         user.setActive(true);
+        user.setProvincia(dto.getProvincia());
+        user.setLocalidad(dto.getLocalidad());
         user.setUpDateTime(LocalDateTime.now());
 
         Professional professional = new Professional();
         professional.setSpecialty(dto.getSpecialty());
+        professional.setMatriculaNac(dto.getMatriculaNac());
+        professional.setMatriculaProv(dto.getMatriculaProv());
         professional.setUser(user);
         professional.setLastName(dto.getLastName());
+        professional.setModalidad(dto.getModalidad());
 
         userRepository.save(user);
         professionalRepository.save(professional);

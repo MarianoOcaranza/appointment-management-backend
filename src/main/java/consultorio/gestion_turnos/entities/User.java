@@ -37,6 +37,9 @@ public class User {
 
     private String lastName;
 
+    private String provincia;
+    private String localidad;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;

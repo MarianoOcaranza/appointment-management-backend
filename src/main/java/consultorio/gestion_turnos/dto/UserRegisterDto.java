@@ -25,4 +25,7 @@ public class UserRegisterDto {
 
     @NotBlank(message = "Last Name required")
     private String lastName;
+
+    private String provincia;
+    private String localidad;
 }
