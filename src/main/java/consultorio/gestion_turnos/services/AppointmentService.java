@@ -35,7 +35,8 @@ public class AppointmentService {
     }
 
     public void createAppointment(AppointmentRequestDto dto) throws Exception {
-        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
+            .orElseThrow(()-> new EntityNotFoundException("User not found"));
 
         if(!user.getRole().equals(Role.PATIENT)) {
             throw new Exception("User is not a patient");
@@ -73,7 +74,9 @@ public class AppointmentService {
 
     @Transactional
     public List<AppointmentRetrieveDto> getAppointments() throws Exception {
-        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
+                    .orElseThrow(()-> new EntityNotFoundException("User not found"));
+
         List<AppointmentRetrieveDto> appointments = new ArrayList<>();
 
         try {

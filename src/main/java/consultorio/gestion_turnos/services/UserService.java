@@ -16,15 +16,17 @@ import consultorio.gestion_turnos.repositories.PatientRepository;
 import consultorio.gestion_turnos.repositories.ProfessionalRepository;
 import consultorio.gestion_turnos.repositories.UserRepository;
 import consultorio.gestion_turnos.security.UserDetailsImpl;
+import jakarta.persistence.EntityNotFoundException;
+
 
 @Service
 public class UserService implements UserDetailsService {
 
+//--------------------------Dependencies & injection------------------------------
     private final UserRepository userRepository;
     private final PatientRepository patientRepository;
     private final ProfessionalRepository professionalRepository;
     private final PasswordEncoder passwordEncoder;
-
 
     public UserService(UserRepository userRepository, PatientRepository patientRepository, ProfessionalRepository professionalRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -36,13 +38,16 @@ public class UserService implements UserDetailsService {
 
 //------------------------------Register patient---------------------------------
     public void registerPatient(PatientRegisterDto dto) throws Exception {
+
+        //---------------------Validates email and username----------------------
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new Exception("Email already in use");
         }
         if (userRepository.existsByUsername(dto.getUsername())) {
             throw new Exception("Username already exists");
         }
-        
+
+        //---------------------User creation------------------------------
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setFirstName(dto.getFirstName());
@@ -56,9 +61,11 @@ public class UserService implements UserDetailsService {
         user.setLocalidad(dto.getLocalidad());
         user.setUpDateTime(LocalDateTime.now());
 
+        //-------------------Patient creation---------------------------
         Patient patient = new Patient();
         patient.setUser(user);
-        
+
+        //-------------------Save on database---------------------------
         userRepository.save(user);
         patientRepository.save(patient);
     }
@@ -66,6 +73,8 @@ public class UserService implements UserDetailsService {
 
 //------------------------------Register professional---------------------------------
     public void registerProfessional(ProfessionalRegisterDto dto) throws Exception {
+
+        //---------------------Validates email and username---------------------
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new Exception("Email already in use");
         }
@@ -73,6 +82,7 @@ public class UserService implements UserDetailsService {
             throw new Exception("Username already exists");
         }
 
+        //-------------------User creation------------------------------
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setFirstName(dto.getFirstName());
@@ -86,6 +96,7 @@ public class UserService implements UserDetailsService {
         user.setLocalidad(dto.getLocalidad());
         user.setUpDateTime(LocalDateTime.now());
 
+        //-------------------Professional creation------------------------------
         Professional professional = new Professional();
         professional.setSpecialty(dto.getSpecialty());
         professional.setMatriculaNac(dto.getMatriculaNac());
@@ -94,33 +105,36 @@ public class UserService implements UserDetailsService {
         professional.setLastName(dto.getLastName());
         professional.setModalidad(dto.getModalidad());
 
+        //-------------------Save on database---------------------------
         userRepository.save(user);
         professionalRepository.save(professional);
     }
-    
+
+
 //------------------------------Deactivate user---------------------------------
     public void deactivateUser(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User does not exists.");
-        } else if (!user.getActive()) {
+
+        User user = userRepository.findByUsername(username)
+            .orElseThrow(()-> new EntityNotFoundException("User not found"));;
+
+        if (!user.getActive()) {
             throw new UsernameNotFoundException("Username is already unactive");
         }
+
         user.setActive(false);
         userRepository.save(user);
     }
 
-
 //----------------------Load by username (UserDetailsService)--------------------------
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{   
-        User user = userRepository.findByUsername(username);
-        if(user == null ) {
-            throw new UsernameNotFoundException("User does not exists");
-        }
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
+        User user = userRepository.findByUsername(username)
+            .orElseThrow(()-> new EntityNotFoundException("User not found"));
+
         if (!user.getActive()) {
             throw new UsernameNotFoundException("User is not active");
         }
+        
         return new UserDetailsImpl(user);
     }       
 }

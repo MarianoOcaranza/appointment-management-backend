@@ -8,7 +8,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import consultorio.gestion_turnos.dto.PatientRegisterDto;
 import consultorio.gestion_turnos.dto.ProfessionalRegisterDto;
 import consultorio.gestion_turnos.dto.UserLoginDto;
+import consultorio.gestion_turnos.dto.UserRetrieveDto;
+import consultorio.gestion_turnos.entities.User;
 import consultorio.gestion_turnos.security.JwtUtils;
+import consultorio.gestion_turnos.security.UserDetailsImpl;
 import consultorio.gestion_turnos.services.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -53,6 +55,7 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+        
         return ResponseEntity.ok("Patient registered successfully");
     }
 
@@ -95,7 +98,8 @@ public class AuthController {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            UserDetails userDetails = userService.loadUserByUsername(dto.getUsername());
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            User user = userDetails.getUser();
             String token = jwtUtils.generateToken(userDetails);
             Cookie cookie = new Cookie("jwt", token);
             cookie.setHttpOnly(true);
@@ -104,7 +108,7 @@ public class AuthController {
             cookie.setMaxAge(24*60*60);
             response.addCookie(cookie);
 
-            return ResponseEntity.ok("Login successfull, welcome " + jwtUtils.getUsernameFromToken(token) + " Role: " + jwtUtils.getRoleFromToken(token));
+            return ResponseEntity.ok(new UserRetrieveDto(user.getFirstName(), user.getLastName(), user.getEmail(), user.getRole()));
 
         } catch(UsernameNotFoundException e) {
             return ResponseEntity.status(403).body("Invalid credentials: " + e.getMessage());
