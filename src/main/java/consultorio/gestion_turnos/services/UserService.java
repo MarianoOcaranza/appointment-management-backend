@@ -110,7 +110,6 @@ public class UserService implements UserDetailsService {
         professionalRepository.save(professional);
     }
 
-
 //------------------------------Deactivate user---------------------------------
     public void deactivateUser(String username) throws UsernameNotFoundException {
 
@@ -124,6 +123,7 @@ public class UserService implements UserDetailsService {
         user.setActive(false);
         userRepository.save(user);
     }
+  
 
 //----------------------Load by username (UserDetailsService)--------------------------
     @Override
