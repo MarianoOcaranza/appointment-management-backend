@@ -2,12 +2,13 @@ package consultorio.gestion_turnos.services;
 
 import consultorio.gestion_turnos.dto.PatientRegisterDto;
 import consultorio.gestion_turnos.dto.ProfessionalRegisterDto;
+import consultorio.gestion_turnos.dto.UserRetrieveDto;
 import consultorio.gestion_turnos.entities.Patient;
 import consultorio.gestion_turnos.entities.Professional;
 import consultorio.gestion_turnos.entities.User;
 import consultorio.gestion_turnos.enums.Role;
 import java.time.LocalDateTime;
-
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -41,7 +42,7 @@ public class UserService implements UserDetailsService {
 //------------------------------Register patient---------------------------------
     public void registerPatient(PatientRegisterDto dto) throws Exception {
 
-        //---------------------Validates email and username----------------------
+        //---------------------Validates email and usermail existence----------------------
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new Exception("Email already in use");
         }
@@ -76,7 +77,7 @@ public class UserService implements UserDetailsService {
 //------------------------------Register professional---------------------------------
     public void registerProfessional(ProfessionalRegisterDto dto) throws Exception {
 
-        //---------------------Validates email and username---------------------
+        //---------------------Validates email and username existence---------------------
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new Exception("Email already in use");
         }
@@ -112,22 +113,37 @@ public class UserService implements UserDetailsService {
         professionalRepository.save(professional);
     }
 
-//------------------------------Deactivate user---------------------------------
-    public void deactivateUser() throws UsernameNotFoundException {
 
+//------------------------------Deactivate user---------------------------------
+    public void deactivateUser() throws Exception {
+
+        //---------------------Retrieve current User from username---------------------------------
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        
+
         User user = userRepository.findByUsername(username)
             .orElseThrow(()-> new EntityNotFoundException("User not found"));;
 
         if (!user.getActive()) {
-            throw new UsernameNotFoundException("Username is already unactive");
+            throw new Exception("Username is already unactive");
         }
 
+        //Set activated to false
         user.setActive(false);
         userRepository.save(user);
     }
   
+
+
+//--------------------------------Get current user--------------------------
+    public UserRetrieveDto getCurrentUser(Authentication authentication) throws Exception {
+        if(authentication == null || !authentication.isAuthenticated()) {
+            throw new Exception("User is not authenticated!");
+        }
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        return new UserRetrieveDto(userDetails.getFullname(), userDetails.getEmail(), userDetails.getRole());
+    }
+
 
 //----------------------Load by username (UserDetailsService)--------------------------
     @Override

@@ -33,8 +33,10 @@ public class User {
 
     private String phone;
 
+    @Column(nullable = false)
     private String firstName;
 
+    @Column(nullable = false)
     private String lastName;
 
     private String provincia;

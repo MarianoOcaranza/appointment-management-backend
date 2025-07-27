@@ -64,11 +64,11 @@ public class AvailabilityService {
         }).toList();
     }
 
-    public List<LocalTime> getTimeSlots(Long professionalId, LocalDate date) {
+    public List<LocalTime> getTimeSlots(Long professionalId, LocalDate date) throws Exception {
         DayOfWeek dow = date.getDayOfWeek();
 
         Availability availability = availabilityRepository.findByProfessionalIdAndDayOfWeek(professionalId, dow)
-            .orElseThrow(()-> new EntityNotFoundException("Professional not available in this date"));
+            .orElseThrow(()-> new Exception("Professional not available in this date"));
         
         List<LocalTime> slots = new ArrayList<>();
         LocalTime current = availability.getStartTime();

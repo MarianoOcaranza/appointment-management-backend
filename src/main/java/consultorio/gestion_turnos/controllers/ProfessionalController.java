@@ -87,8 +87,7 @@ public class ProfessionalController {
             List<LocalTime> slots = availabilityService.getTimeSlots(id, date);
             return ResponseEntity.ok(slots);
         } catch(Exception e) {
-            return ResponseEntity.internalServerError().body("Error retrieving slots: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
-
 }
