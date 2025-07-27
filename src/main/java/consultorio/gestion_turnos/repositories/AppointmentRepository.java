@@ -1,12 +1,12 @@
 package consultorio.gestion_turnos.repositories;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import consultorio.gestion_turnos.entities.Appointment;
-import consultorio.gestion_turnos.entities.Professional;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long>{
-    boolean existsByProfessionalAndDateTime(Professional professional, LocalDateTime dateTime);
+    boolean existsByProfessionalIdAndDateAndTime(Long professionalId, LocalDate date, LocalTime time);
 }

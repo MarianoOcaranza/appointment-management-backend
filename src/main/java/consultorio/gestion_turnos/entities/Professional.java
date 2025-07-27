@@ -5,6 +5,8 @@ import java.util.List;
 
 import consultorio.gestion_turnos.enums.Modalidad;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,6 +28,8 @@ public class Professional {
 
     private String matriculaNac;
     private String matriculaProv;
+
+    @Enumerated(EnumType.STRING)
     private Modalidad modalidad;
 
     private String lastName;

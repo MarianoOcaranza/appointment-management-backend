@@ -1,7 +1,7 @@
 package consultorio.gestion_turnos.entities;
 
-import java.time.LocalDateTime;
-
+import java.time.LocalDate;
+import java.time.LocalTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,5 +30,8 @@ public class Appointment {
     private Patient patient;
 
     @Column(nullable = false)
-    private LocalDateTime dateTime;
+    private LocalDate date;
+
+    @Column(nullable = false)
+    private LocalTime time;
 }

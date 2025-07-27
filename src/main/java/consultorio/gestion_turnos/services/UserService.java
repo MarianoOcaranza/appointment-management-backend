@@ -7,6 +7,8 @@ import consultorio.gestion_turnos.entities.Professional;
 import consultorio.gestion_turnos.entities.User;
 import consultorio.gestion_turnos.enums.Role;
 import java.time.LocalDateTime;
+
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -111,8 +113,10 @@ public class UserService implements UserDetailsService {
     }
 
 //------------------------------Deactivate user---------------------------------
-    public void deactivateUser(String username) throws UsernameNotFoundException {
+    public void deactivateUser() throws UsernameNotFoundException {
 
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        
         User user = userRepository.findByUsername(username)
             .orElseThrow(()-> new EntityNotFoundException("User not found"));;
 

@@ -38,7 +38,7 @@ public class AuthController {
     private JwtUtils jwtUtils;
 
 //------------------------------Register patient endpoint /api/auth/register-patient---------------------------------
-    @PostMapping("/register-patient")
+    @PostMapping("/patients")
     public ResponseEntity<?> registerPatient(@Valid @RequestBody PatientRegisterDto dto, BindingResult bindingValidations) {
 
         if (bindingValidations.hasErrors()) {
@@ -59,7 +59,7 @@ public class AuthController {
     }
 
 //------------------------------Register professional endpoint /api/auth/register-professional---------------------------------
-    @PostMapping("/register-professional")
+    @PostMapping("/professionals")
     public ResponseEntity<?> registerProfessional(@Valid @RequestBody ProfessionalRegisterDto dto, BindingResult bindingValidations) {
 
         if (bindingValidations.hasErrors()) {

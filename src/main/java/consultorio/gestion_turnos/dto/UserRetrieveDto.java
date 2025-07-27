@@ -1,7 +1,9 @@
 package consultorio.gestion_turnos.dto;
 
 import consultorio.gestion_turnos.enums.Role;
+import lombok.Data;
 
+@Data
 public class UserRetrieveDto {
     public String fullName;
     public String email;

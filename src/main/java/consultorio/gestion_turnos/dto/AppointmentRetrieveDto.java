@@ -1,6 +1,7 @@
 package consultorio.gestion_turnos.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import lombok.Data;
 
@@ -9,12 +10,14 @@ public class AppointmentRetrieveDto {
     public Long id;
     public String professionalUsername;
     public String patientUsername;
-    public LocalDateTime dateTime;
+    public LocalDate date;
+    public LocalTime time;
 
-    public AppointmentRetrieveDto(Long id, String professionalUsername, String patientUsername, LocalDateTime dateTime) {
+    public AppointmentRetrieveDto(Long id, String professionalUsername, String patientUsername, LocalDate date, LocalTime time) {
         this.id = id;
         this.professionalUsername = professionalUsername;
         this.patientUsername = patientUsername;
-        this.dateTime = dateTime;
+        this.date = date;
+        this.time = time;
     }
 }
