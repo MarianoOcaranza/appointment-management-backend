@@ -1,6 +1,7 @@
 package consultorio.gestion_turnos.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -11,7 +12,10 @@ public class AppointmentRequestDto {
     @NotBlank(message = "Please select a professional")
     private Long professionalId;
 
-    @NotBlank(message = "Please set a datetime")
-    private LocalDateTime dateTime;
+    @NotBlank(message = "Please set a date")
+    private LocalDate date;
+
+    @NotBlank(message = "Please set an hour")
+    private LocalTime time;
     
 }

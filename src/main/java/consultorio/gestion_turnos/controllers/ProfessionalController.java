@@ -21,6 +21,7 @@ public class ProfessionalController {
         this.professionalService = professionalService;
     }
 
+//----------------Get/Search professionals endpoint /api/professionals/?search=----------------------
     @GetMapping
     public ResponseEntity<?> getProfessionals(
                             @RequestParam(required = false) String search,

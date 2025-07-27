@@ -48,14 +48,15 @@ public class AppointmentService {
         Professional professional = professionalRepository.findById(dto.getProfessionalId())
             .orElseThrow(()-> new EntityNotFoundException("Professional not found"));
        
-        if (appointmentRepository.existsByProfessionalAndDateTime(professional, dto.getDateTime())) {
+        if (appointmentRepository.existsByProfessionalAndDateAndTime(professional, dto.getDate(), dto.getTime())) {
             throw new Exception("Appointment is not available");
         }
         
         Appointment appointment = new Appointment();
         appointment.setProfessional(professional);
         appointment.setPatient(patient);
-        appointment.setDateTime(dto.getDateTime());
+        appointment.setDate(dto.getDate());
+        appointment.setTime(dto.getTime());
         
         appointmentRepository.save(appointment);
     }
@@ -87,7 +88,8 @@ public class AppointmentService {
                         appointment.getId(),
                         appointment.getProfessional().getUser().getUsername(),
                         appointment.getPatient().getUser().getUsername(),
-                        appointment.getDateTime()
+                        appointment.getDate(),
+                        appointment.getTime()
                     ))
                     .collect(Collectors.toList());
             } else if (user.getRole().equals(Role.PATIENT)) {
@@ -97,7 +99,8 @@ public class AppointmentService {
                         appointment.getId(),
                         appointment.getProfessional().getUser().getUsername(),
                         appointment.getPatient().getUser().getUsername(),
-                        appointment.getDateTime()
+                        appointment.getDate(),
+                        appointment.getTime()
                     ))
                     .collect(Collectors.toList());
             }

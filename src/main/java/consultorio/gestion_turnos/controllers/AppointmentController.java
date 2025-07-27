@@ -26,7 +26,7 @@ public class AppointmentController {
     }
 
     @PreAuthorize("hasRole('PATIENT')")
-    @PostMapping("/new-appointment")
+    @PostMapping
     private ResponseEntity<?> createAppointment(@RequestBody AppointmentRequestDto dto) {
         try {
             appointmentService.createAppointment(dto);
@@ -36,12 +36,12 @@ public class AppointmentController {
         }
     }
 
-    @GetMapping("/my-appointments")
+    @GetMapping
     private List<AppointmentRetrieveDto> getAppointments() throws Exception {
         return appointmentService.getAppointments();
     }
 
-    @DeleteMapping("/delete-appointment/{id}")
+    @DeleteMapping("/{id}")
     private ResponseEntity<?> deleteAppointment(@PathVariable Long id) {
         try {
             appointmentService.deleteAppointment(id);
