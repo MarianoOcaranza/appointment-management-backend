@@ -5,9 +5,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import consultorio.gestion_turnos.dto.AvailabilityDto;
+import consultorio.gestion_turnos.entities.Appointment;
 import consultorio.gestion_turnos.entities.Availability;
 import consultorio.gestion_turnos.entities.Professional;
 import consultorio.gestion_turnos.entities.User;
@@ -16,6 +20,7 @@ import consultorio.gestion_turnos.repositories.AvailabilityRepository;
 import consultorio.gestion_turnos.repositories.ProfessionalRepository;
 import consultorio.gestion_turnos.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class AvailabilityService {
@@ -31,6 +36,7 @@ public class AvailabilityService {
         this.appointmentRepository = appointmentRepository;
     }
 
+    @Transactional
     public void setAvailability(List<AvailabilityDto> dtos) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -38,9 +44,14 @@ public class AvailabilityService {
             .orElseThrow(()-> new EntityNotFoundException("User not found"));
 
         Professional professional = professionalRepository.findByUserId(user.getId())
-            .orElseThrow(()-> new EntityNotFoundException("Professional not found"));
+            .orElseThrow(()-> new EntityNotFoundException("You are not registered as a professional"));
+
+        availabilityRepository.deleteByProfessionalId(professional.getId()); //Delete previous availabilities
 
         List<Availability> newAvailabilities = dtos.stream().map(dto->{
+            if(dto.getStartTime().isAfter(dto.getEndTime())) {
+                throw new IllegalArgumentException("Start time cannot be ahead end time");
+            }
             Availability a = new Availability();
             a.setProfessional(professional);
             a.setDayOfWeek(dto.getDayOfWeek());
@@ -67,17 +78,27 @@ public class AvailabilityService {
     public List<LocalTime> getTimeSlots(Long professionalId, LocalDate date) throws Exception {
         DayOfWeek dow = date.getDayOfWeek();
 
-        Availability availability = availabilityRepository.findByProfessionalIdAndDayOfWeek(professionalId, dow)
-            .orElseThrow(()-> new Exception("Professional not available in this date"));
-        
-        List<LocalTime> slots = new ArrayList<>();
-        LocalTime current = availability.getStartTime();
+        List<Availability> availability = availabilityRepository.findByProfessionalIdAndDayOfWeek(professionalId, dow);
 
-        while(!current.isAfter(availability.getEndTime())) {
-            if(!appointmentRepository.existsByProfessionalIdAndDateAndTime(professionalId, date, current)) {
-                slots.add(current);
+        if (availability.isEmpty()) {
+            throw new Exception("Professional not available on this date");
+        }
+        
+        Set<LocalTime> occupied = appointmentRepository.findByProfessionalIdAndDate(professionalId, date)
+            .stream()
+            .map(Appointment::getTime)
+            .collect(Collectors.toSet());
+
+        List<LocalTime> slots = new ArrayList<>();
+
+        for (Availability a : availability) {
+            LocalTime current = a.getStartTime();
+            while (current.plusMinutes(20).isBefore(a.getEndTime()) || current.plusMinutes(20).equals(a.getEndTime())) {
+                if (!occupied.contains(current)) {
+                    slots.add(current);
+                }
+                current = current.plusMinutes(20);
             }
-            current = current.plusMinutes(20);
         }
         return slots;
     }

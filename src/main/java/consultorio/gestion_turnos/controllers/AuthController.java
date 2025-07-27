@@ -8,7 +8,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -107,11 +106,8 @@ public class AuthController {
             response.addCookie(cookie);
 
             return ResponseEntity.ok(new UserRetrieveDto(userDetails.getFullname(), userDetails.getEmail(), userDetails.getRole()));
-
-        } catch(UsernameNotFoundException e) {
-            return ResponseEntity.status(403).body("Invalid credentials: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Unexpected error: " + e.getLocalizedMessage());
+            return ResponseEntity.status(200).body(e.getLocalizedMessage());
         }
     }
 }

@@ -149,7 +149,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
         User user = userRepository.findByUsername(username)
-            .orElseThrow(()-> new EntityNotFoundException("User not found"));
+            .orElseThrow(()-> new EntityNotFoundException("User does not exists"));
 
         if (!user.getActive()) {
             throw new UsernameNotFoundException("User is not active");
