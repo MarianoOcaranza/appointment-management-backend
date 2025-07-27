@@ -48,7 +48,7 @@ public class AppointmentService {
         Professional professional = professionalRepository.findById(dto.getProfessionalId())
             .orElseThrow(()-> new EntityNotFoundException("Professional not found"));
        
-        if (appointmentRepository.existsByProfessionalAndDateAndTime(professional, dto.getDate(), dto.getTime())) {
+        if (appointmentRepository.existsByProfessionalIdAndDateAndTime(dto.getProfessionalId(), dto.getDate(), dto.getTime())) {
             throw new Exception("Appointment is not available");
         }
         

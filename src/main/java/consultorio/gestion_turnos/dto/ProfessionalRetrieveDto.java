@@ -1,7 +1,9 @@
 package consultorio.gestion_turnos.dto;
 
 import consultorio.gestion_turnos.enums.Modalidad;
+import lombok.Data;
 
+@Data
 public class ProfessionalRetrieveDto {
     public String firstName;
     public String lastName;
