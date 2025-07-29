@@ -1,6 +1,6 @@
 # Appointments management
 
-Appointments-Management is a backend project built with Spring Boot and tested with Postman. This was designed for practicing purposes and showcasing my backend development skills, including: Spring Boot layered architecture, Web security with JWT and cookies management, use of Docker in the development stages, among others.
+Appointments-Management is a backend project built with Spring Boot. It was designed with training purposes and to showcase my backend development skills, including: Spring Boot layered architecture, RESTFul endpoints design, Web security with JWT and cookies management, use of Docker in the development stages, among others.
 
 ### *** IMPORTANT! ***
 As this project is in development stages, applications.properties file is not properly protected. 
@@ -18,15 +18,28 @@ This will be changed in production.
 - Maven
 
 ## Features
+### Authentication:
 - Register user as Professional
 - Register user as Patient
-- Authentication & Authorization with cookie-based JWT and Spring Security
+- Cookie-based JWT login and access permissions
 - Deactivate user
+
+### For professionals:
+- Set availability days and hours
+- Retrieve timeslots with 20 minutes of difference between them (example: 9:00, 9:20, 9:40...)
+
+### For patients:
 - Retrieve all professionals (paginated, 10 professionals per page)
-- Retrieve professionals by search parameters (specialty or last name)
+- Retrieve professionals by search parameters (specialty, last name or localization)
+
+### Appointments:
 - Schedule appointments
 - Cancel appointments
 - Retrieve appointments
+
+## To-do / Future implementations:
+- Configurable timeslots duration (fixed on 20 minutes at the moment)
+
 
 ## Test in local:
 A docker-compose.yml file is provided in this project. 
