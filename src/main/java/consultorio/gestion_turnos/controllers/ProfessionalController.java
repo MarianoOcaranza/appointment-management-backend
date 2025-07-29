@@ -35,6 +35,7 @@ public class ProfessionalController {
 
 //----------------Get/Search professionals endpoint /api/professionals/?search=----------------------
     @GetMapping
+    @PreAuthorize("permitAll()")
     public ResponseEntity<?> getProfessionals(
                             @RequestParam(required = false) String search,
                             @RequestParam(defaultValue = "0") int page,
