@@ -37,10 +37,6 @@ This will be changed in production.
 - Cancel appointments
 - Retrieve appointments
 
-## To-do / Future implementations:
-- Configurable timeslots duration (fixed on 20 minutes at the moment)
-
-
 ## Test in local:
 A docker-compose.yml file is provided in this project. 
 - Using the command `docker-compose up -d` in the root folder will set up the container with the MySQL database necessary to run the project. 
