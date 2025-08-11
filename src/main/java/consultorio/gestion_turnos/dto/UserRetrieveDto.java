@@ -5,12 +5,12 @@ import lombok.Data;
 
 @Data
 public class UserRetrieveDto {
-    public String fullName;
+    public String username;
     public String email;
     public Role role;
 
-    public UserRetrieveDto(String fullName, String email, Role role) {
-        this.fullName = fullName;
+    public UserRetrieveDto(String username, String email, Role role) {
+        this.username = username;
         this.email = email;
         this.role = role;
     }
