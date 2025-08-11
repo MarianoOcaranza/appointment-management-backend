@@ -27,7 +27,7 @@ This will be changed in production.
 - Register user as Patient
 - Cookie-based JWT login and access permissions
 - Deactivate user
-<img width="845" height="640" alt="loginflow drawio" src="https://github.com/user-attachments/assets/5a85cd29-1f52-45d3-a724-4d616cd5ca2f" />
+<img width="845" height="640" alt="loginflow drawio" src="https://github.com/user-attachments/assets/35d8cbaa-8de4-4f23-8f2d-8fdc18768eaa" />
 
 
 ### For professionals:
