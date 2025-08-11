@@ -29,6 +29,9 @@ This will be changed in production.
 - Deactivate user
 <img width="845" height="640" alt="loginflow drawio" src="https://github.com/user-attachments/assets/35d8cbaa-8de4-4f23-8f2d-8fdc18768eaa" />
 
+### Cookie validation for each request (Stateless auth)
+<img width="741" height="481" alt="authfilter drawio" src="https://github.com/user-attachments/assets/024a64a5-7ded-4f36-b68f-6f3e357061d9" />
+
 
 ### For professionals:
 - Set availability days and hours
