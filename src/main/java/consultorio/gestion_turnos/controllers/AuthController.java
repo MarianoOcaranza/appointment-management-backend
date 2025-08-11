@@ -3,6 +3,7 @@ package consultorio.gestion_turnos.controllers;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -54,7 +55,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
         
-        return ResponseEntity.ok("Patient registered successfully");
+        return ResponseEntity.ok("Patient registered successfully: " + dto.getUsername());
     }
 
 //------------------------------Register professional endpoint /api/auth/register-professional---------------------------------
@@ -100,14 +101,16 @@ public class AuthController {
             String token = jwtUtils.generateToken(userDetails);
             Cookie cookie = new Cookie("jwt", token);
             cookie.setHttpOnly(true);
-            cookie.setSecure(false); //activar para HTTPS
+            cookie.setSecure(true);
+            cookie.setAttribute("SameSite", "None");
             cookie.setPath("/");
             cookie.setMaxAge(24*60*60);
             response.addCookie(cookie);
 
-            return ResponseEntity.ok(new UserRetrieveDto(userDetails.getFullname(), userDetails.getEmail(), userDetails.getRole()));
+            return ResponseEntity.ok(new UserRetrieveDto(userDetails.getUsername(), userDetails.getEmail(), userDetails.getRole()));
         } catch (Exception e) {
-            return ResponseEntity.status(200).body(e.getLocalizedMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("message", "¡Credenciales inválidas! revisá los datos proporcionados"));
         }
     }
 }

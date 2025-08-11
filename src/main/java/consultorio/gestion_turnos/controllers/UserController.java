@@ -1,5 +1,8 @@
 package consultorio.gestion_turnos.controllers;
 
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +39,10 @@ public class UserController {
     public ResponseEntity<?> getCurrentUser(Authentication authentication) {
         try {
             UserRetrieveDto dto = userService.getCurrentUser(authentication);
-            return ResponseEntity.ok(dto);
+            if(!dto.getUsername().isEmpty() || dto.getUsername() != null) {
+                return ResponseEntity.ok(dto);
+            } 
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "¡No estás autenticado!"));
         } catch(Exception e) {
             return ResponseEntity.internalServerError().body("Error retrieving user info: " + e.getMessage());
         }
