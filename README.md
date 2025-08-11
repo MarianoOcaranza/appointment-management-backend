@@ -17,6 +17,10 @@ This will be changed in production.
 - DTOs for input validation
 - Maven
 
+## Entities & Relationships
+![mediar_data_design](https://github.com/user-attachments/assets/3181ec9a-1f7b-40fb-a5c9-0338bfae666d)
+
+
 ## Features
 ### Authentication:
 - Register user as Professional
