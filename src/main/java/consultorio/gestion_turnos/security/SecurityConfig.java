@@ -2,6 +2,7 @@ package consultorio.gestion_turnos.security;
 
 import java.util.Arrays;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -53,6 +54,7 @@ public class SecurityConfig {
             .clearAuthentication(true))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/professionals/**").permitAll()
             .requestMatchers("/api/appointments/**", "/api/users/**", "/api/professionals/**").authenticated()
             .anyRequest().authenticated()
         )
