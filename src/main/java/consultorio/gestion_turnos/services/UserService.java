@@ -141,7 +141,7 @@ public class UserService implements UserDetailsService {
         }
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        return new UserRetrieveDto(userDetails.getFullname(), userDetails.getEmail(), userDetails.getRole());
+        return new UserRetrieveDto(userDetails.getUsername(), userDetails.getEmail(), userDetails.getRole());
     }
 
 

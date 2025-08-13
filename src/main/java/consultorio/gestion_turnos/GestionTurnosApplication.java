@@ -8,5 +8,4 @@ public class GestionTurnosApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GestionTurnosApplication.class, args);
 	}
-
 }

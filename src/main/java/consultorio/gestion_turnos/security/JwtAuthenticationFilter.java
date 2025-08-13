@@ -50,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
             } catch (Exception e) {
-                System.out.println("Invalid token: " + e.getMessage());
+                System.out.println("Token invalid or expired!");
             }
         } else {
             System.out.println("Cookie not found");
