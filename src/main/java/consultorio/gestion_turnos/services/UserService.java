@@ -44,11 +44,12 @@ public class UserService implements UserDetailsService {
 
         //---------------------Validates email and usermail existence----------------------
         if (userRepository.existsByEmail(dto.getEmail())) {
-            throw new Exception("Email already in use");
+            throw new Exception("El email ya está en uso");
         }
         if (userRepository.existsByUsername(dto.getUsername())) {
-            throw new Exception("Username already exists");
+            throw new Exception("El nombre de usuario ya está en uso");
         }
+
 
         //---------------------User creation------------------------------
         User user = new User();
@@ -79,10 +80,10 @@ public class UserService implements UserDetailsService {
 
         //---------------------Validates email and username existence---------------------
         if (userRepository.existsByEmail(dto.getEmail())) {
-            throw new Exception("Email already in use");
+            throw new Exception("El email ya está en uso");
         }
         if (userRepository.existsByUsername(dto.getUsername())) {
-            throw new Exception("Username already exists");
+            throw new Exception("El nombre de usuario ya está en uso");
         }
 
         //-------------------User creation------------------------------

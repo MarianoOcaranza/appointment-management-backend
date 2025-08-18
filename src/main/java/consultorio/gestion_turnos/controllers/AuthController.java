@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import consultorio.gestion_turnos.dto.PatientRegisterDto;
 import consultorio.gestion_turnos.dto.ProfessionalRegisterDto;
 import consultorio.gestion_turnos.dto.UserLoginDto;
-import consultorio.gestion_turnos.dto.UserRetrieveDto;
 import consultorio.gestion_turnos.security.JwtUtils;
 import consultorio.gestion_turnos.security.UserDetailsImpl;
 import consultorio.gestion_turnos.services.UserService;
@@ -51,9 +50,8 @@ public class AuthController {
         try {
             userService.registerPatient(dto);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", e.getMessage()));
         }
-        
         return ResponseEntity.ok("Patient registered successfully: " + dto.getUsername());
     }
 
@@ -72,7 +70,7 @@ public class AuthController {
         try {
             userService.registerProfessional(dto);
         } catch(Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", e.getMessage()));
         }
 
         return ResponseEntity.ok("Professional registered successfully");
@@ -104,7 +102,7 @@ public class AuthController {
             cookie.setMaxAge(24*60*60);
             response.addCookie(cookie);
 
-            return ResponseEntity.ok(new UserRetrieveDto(userDetails.getUsername(), userDetails.getEmail(), userDetails.getRole()));
+            return ResponseEntity.ok(Map.of("message", "Login exitoso!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("message", "¡Credenciales inválidas! revisá los datos proporcionados"));
