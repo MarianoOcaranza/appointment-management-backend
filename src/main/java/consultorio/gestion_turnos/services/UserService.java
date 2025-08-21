@@ -20,6 +20,7 @@ import consultorio.gestion_turnos.repositories.ProfessionalRepository;
 import consultorio.gestion_turnos.repositories.UserRepository;
 import consultorio.gestion_turnos.security.UserDetailsImpl;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 
 @Service
@@ -40,6 +41,7 @@ public class UserService implements UserDetailsService {
 
 
 //------------------------------Register patient---------------------------------
+    @Transactional
     public void registerPatient(PatientRegisterDto dto) throws Exception {
 
         //---------------------Validates email and usermail existence----------------------
@@ -70,12 +72,12 @@ public class UserService implements UserDetailsService {
         patient.setUser(user);
 
         //-------------------Save on database---------------------------
-        userRepository.save(user);
         patientRepository.save(patient);
     }
 
 
 //------------------------------Register professional---------------------------------
+    @Transactional
     public void registerProfessional(ProfessionalRegisterDto dto) throws Exception {
 
         //---------------------Validates email and username existence---------------------
@@ -85,6 +87,15 @@ public class UserService implements UserDetailsService {
         if (userRepository.existsByUsername(dto.getUsername())) {
             throw new Exception("El nombre de usuario ya está en uso");
         }
+
+        //---------------------Validates medical license numbers existence---------------------
+        if (professionalRepository.existsByMatriculaNac(dto.getMatriculaNac()) && dto.getMatriculaNac() != null) {
+            throw new Exception("La matrícula nacional ya se encuentra registrada");
+        }
+        if(professionalRepository.existsByMatriculaProv(dto.getMatriculaProv()) && dto.getMatriculaProv() != null) {
+            throw new Exception("La matrícula provincial ya se encuentra registrada");
+        }
+
 
         //-------------------User creation------------------------------
         User user = new User();
@@ -106,11 +117,9 @@ public class UserService implements UserDetailsService {
         professional.setMatriculaNac(dto.getMatriculaNac());
         professional.setMatriculaProv(dto.getMatriculaProv());
         professional.setUser(user);
-        professional.setLastName(dto.getLastName());
         professional.setModalidad(dto.getModalidad());
 
         //-------------------Save on database---------------------------
-        userRepository.save(user);
         professionalRepository.save(professional);
     }
 

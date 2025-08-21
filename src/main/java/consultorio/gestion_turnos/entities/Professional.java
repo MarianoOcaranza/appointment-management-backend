@@ -3,6 +3,7 @@ package consultorio.gestion_turnos.entities;
 import java.util.ArrayList;
 import java.util.List;
 import consultorio.gestion_turnos.enums.Modalidad;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -27,16 +28,16 @@ public class Professional {
     @Column(nullable = false)
     private String specialty;
 
-    private String matriculaNac;
-    private String matriculaProv;
+    @Column(nullable = false, unique = true)
+    private Long matriculaNac;
+
+    @Column(unique = true)
+    private Long matriculaProv;
 
     @Enumerated(EnumType.STRING)
     private Modalidad modalidad;
-
-    @Column(nullable = false)
-    private String lastName;
     
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="user_id", nullable = false)
     private User user;
 

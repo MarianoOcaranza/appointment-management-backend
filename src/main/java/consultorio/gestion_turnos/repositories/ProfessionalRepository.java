@@ -13,18 +13,16 @@ import consultorio.gestion_turnos.entities.Professional;
 
 public interface ProfessionalRepository extends JpaRepository<Professional, Long>{
         Optional<Professional> findByUserId(Long userId);
+        boolean existsByMatriculaNac(Long matriculaNac);
+        boolean existsByMatriculaProv(Long matriculaProv);
 
-        //The following queries were written in order to solve the N+1 problem
-        //This is because all Professionals have an User associated, and some of the User 
-        //attributes are incluided in the GET endpoint response. It's much more efficient to retrieve
-        //data with DTO directly from the repository, avoiding the access to the 
-        //user entity with hibernate.
         @Query("""
                 SELECT new consultorio.gestion_turnos.dto.ProfessionalRetrieveDto(
                 u.firstName, u.lastName, u.phone, u.email, p.specialty, u.provincia, u.localidad, p.matriculaNac, p.matriculaProv, p.modalidad
                 )
                 FROM Professional p
                 JOIN p.user u
+                WHERE u.active = true
         """)
         Page<ProfessionalRetrieveDto> findAllPage(Pageable pageable);
 
@@ -36,9 +34,11 @@ public interface ProfessionalRepository extends JpaRepository<Professional, Long
                 FROM Professional p
                 JOIN p.user u
                 WHERE LOWER(p.specialty) LIKE LOWER(CONCAT('%', :search, '%'))
+                OR LOWER(u.firstName) LIKE LOWER(CONCAT('%', :search, '%'))
                 OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :search, '%'))
                 OR LOWER(u.provincia) LIKE LOWER(CONCAT('%', :search, '%'))
                 OR LOWER(u.localidad) LIKE LOWER(CONCAT('%', :search, '%'))
+                AND u.active = true
                 """)
         Page<ProfessionalRetrieveDto> searchProfessional(@Param("search") String search, Pageable pageable);
 }

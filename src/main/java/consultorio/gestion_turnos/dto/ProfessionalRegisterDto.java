@@ -12,8 +12,9 @@ public class ProfessionalRegisterDto extends UserRegisterDto{
     @NotBlank(message = "Professional must have a specialty")
     private String specialty;
     
-    private String matriculaNac;
-    private String matriculaProv;
+    @NotNull(message = "Professional must have a medical license (National)")
+    private Long matriculaNac;
+    private Long matriculaProv;
 
     @NotNull(message = "Please, set a modality")
     private Modalidad modalidad;

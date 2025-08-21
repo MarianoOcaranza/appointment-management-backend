@@ -66,7 +66,7 @@ public class AuthController {
             });
             return ResponseEntity.badRequest().body(errors);
         }
-
+        
         try {
             userService.registerProfessional(dto);
         } catch(Exception e) {

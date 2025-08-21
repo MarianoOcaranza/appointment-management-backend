@@ -12,11 +12,11 @@ public class ProfessionalRetrieveDto {
     public String specialty;
     public String provincia;
     public String localidad;
-    public String matriculaProv;
-    public String matriculaNac;
+    public Long matriculaProv;
+    public Long matriculaNac;
     public Modalidad modalidad;
 
-    public ProfessionalRetrieveDto(String firstName, String lastName, String phone, String email, String specialty, String provincia, String localidad, String matriculaNac, String matriculaProv, Modalidad modalidad) {
+    public ProfessionalRetrieveDto(String firstName, String lastName, String phone, String email, String specialty, String provincia, String localidad, Long matriculaNac, Long matriculaProv, Modalidad modalidad) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
