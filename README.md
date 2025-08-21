@@ -17,6 +17,10 @@ This will be changed in production.
 - DTOs for input validation
 - Maven
 
+## Data Model - Entities & Relationships
+<img width="761" height="531" alt="mediardata drawio" src="https://github.com/user-attachments/assets/35bfad7f-9131-4780-a293-b430975b8bb3" />
+
+
 ## Features
 ### Authentication:
 - Register user as Professional
