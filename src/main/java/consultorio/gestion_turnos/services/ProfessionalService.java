@@ -1,7 +1,5 @@
 package consultorio.gestion_turnos.services;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,14 +14,14 @@ public class ProfessionalService {
         this.professionalRepository = professionalRepository;
     }
 
-    public List<ProfessionalRetrieveDto> getProfessionals(Pageable pageable) {
+    public Page<ProfessionalRetrieveDto> getProfessionals(Pageable pageable) {
         Page<ProfessionalRetrieveDto> professionals = professionalRepository.findAllPage(pageable);
-        return professionals.getContent();
+        return professionals;
        
     }
 
-    public List<ProfessionalRetrieveDto> searchProfessionals(String search, Pageable pageable) {
+    public Page<ProfessionalRetrieveDto> searchProfessionals(String search, Pageable pageable) {
         Page<ProfessionalRetrieveDto> professionals = professionalRepository.searchProfessional(search, pageable);
-        return professionals.getContent();
+        return professionals;
     }
 }

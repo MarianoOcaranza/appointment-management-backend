@@ -18,7 +18,7 @@ public interface ProfessionalRepository extends JpaRepository<Professional, Long
 
         @Query("""
                 SELECT new consultorio.gestion_turnos.dto.ProfessionalRetrieveDto(
-                u.firstName, u.lastName, u.phone, u.email, p.specialty, u.provincia, u.localidad, p.matriculaNac, p.matriculaProv, p.modalidad
+                p.id, u.firstName, u.lastName, u.phone, u.email, p.specialty, u.provincia, u.localidad, p.matriculaNac, p.matriculaProv, p.modalidad
                 )
                 FROM Professional p
                 JOIN p.user u
@@ -29,7 +29,7 @@ public interface ProfessionalRepository extends JpaRepository<Professional, Long
 
         @Query("""
                 SELECT new consultorio.gestion_turnos.dto.ProfessionalRetrieveDto(
-                u.firstName, u.lastName, u.phone, u.email, p.specialty, u.provincia, u.localidad, p.matriculaNac, p.matriculaProv, p.modalidad
+                p.id, u.firstName, u.lastName, u.phone, u.email, p.specialty, u.provincia, u.localidad, p.matriculaNac, p.matriculaProv, p.modalidad
                 )
                 FROM Professional p
                 JOIN p.user u

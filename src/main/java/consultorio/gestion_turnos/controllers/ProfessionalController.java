@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import consultorio.gestion_turnos.dto.AvailabilityDto;
+import consultorio.gestion_turnos.dto.PageResponse;
 import consultorio.gestion_turnos.dto.ProfessionalRetrieveDto;
 import consultorio.gestion_turnos.services.AvailabilityService;
 import consultorio.gestion_turnos.services.ProfessionalService;
@@ -38,17 +40,28 @@ public class ProfessionalController {
     public ResponseEntity<?> getProfessionals(
                             @RequestParam(required = false) String search,
                             @RequestParam(defaultValue = "0") int page,
-                            @RequestParam(defaultValue = "10") int size) {
+                            @RequestParam(defaultValue = "12") int size) {
         Pageable pageable = PageRequest.of(page, size);
 
         try {
+            Page<ProfessionalRetrieveDto> professionalPage;
+
             if(search != null && !search.isEmpty()) {
-                List<ProfessionalRetrieveDto> professionalPage = professionalService.searchProfessionals(search, pageable);
-                return ResponseEntity.ok(professionalPage);
+                professionalPage = professionalService.searchProfessionals(search, pageable);
             } else {
-                List<ProfessionalRetrieveDto> professionalPage = professionalService.getProfessionals(pageable);
-                return ResponseEntity.ok(professionalPage);
+                professionalPage = professionalService.getProfessionals(pageable);
             }
+
+            PageResponse<ProfessionalRetrieveDto> pageResponse = new PageResponse<>(
+                professionalPage.getContent(),
+                professionalPage.getNumber(),
+                professionalPage.getSize(),
+                professionalPage.getTotalElements(),
+                professionalPage.getTotalPages()
+            );
+
+            return ResponseEntity.ok(pageResponse);
+
         } catch(Exception e) {
             return ResponseEntity.internalServerError().body("An error has occurred:" + e.getMessage());
         }
